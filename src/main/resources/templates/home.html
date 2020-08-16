@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link>
+    <meta charset="UTF-8">
+    <title>COVID19 Tracker</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css" />
+
+</head>
+<body>
+<div class="jumbotron">
+    <h1 class="display-4">COVID19 Tracker</h1>
+    <p class="lead">Total confirmed cases as of today:</p>
+    <h2>World: <span th:text="${totalWorldCases}"></span></h2>
+    <h2>USA: <span th:text="${totalUsCases}"></span></h2>
+</div>
+<div class="container">
+    <canvas id="myChart" width="400" height="400" class="my-5"></canvas>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th>World Cases</th>
+            <th>USA Cases</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="stat : ${stats}">
+            <td th:text="${stat.date}"></td>
+            <td th:text="${stat.worldCases}">0</td>
+            <td th:text="${stat.usCases}">0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    var data = [(${jsDataString})];
+    var labels = [];
+    var worldData = [];
+    var usData = [];
+    for (var item of data) {
+        labels.push(item.date);
+        worldData.push(item.world);
+        usData.push(item.us);
+    }
+
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'World',
+                data: worldData,
+                borderColor: '#1ea654',
+                pointBackgroundColor: '#1ea654',
+                hoverBackgroundColor: '#1ea654',
+                fill: false
+            }, {
+                label: "USA",
+                data: usData,
+                borderColor: '#3971cc',
+                pointBackgroundColor: '#3971cc',
+                hoverBackgroundColor: '#3971cc',
+                fill: false
+            }]
+        },
+    });
+</script>
+</body>
+</html>
